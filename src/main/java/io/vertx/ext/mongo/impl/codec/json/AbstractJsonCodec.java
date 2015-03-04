@@ -146,7 +146,9 @@ public abstract class AbstractJsonCodec<O, A> implements Codec<O> {
   }
 
   protected BsonType getBsonType(Object value) {
-    if (value instanceof Boolean) {
+    if (value == null) {
+      return BsonType.NULL;
+    } else if (value instanceof Boolean) {
       return BsonType.BOOLEAN;
     } else if (value instanceof Double) {
       return BsonType.DOUBLE;
