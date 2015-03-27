@@ -253,6 +253,17 @@
  * {@link examples.Examples#example12}
  * ----
  *
+ * === MongoDB Extended JSON support
+ *
+ * For now, only date type is supported (cf http://docs.mongodb.org/manual/reference/mongodb-extended-json )
+ *
+ * Here's an example of inserting a document with a date field
+ *
+ * [source,$lang]
+ * ----
+ * {@link examples.Examples#example13_0}
+ * ----
+ *
  * == Configuring the service
  *
  * The service is configured with a json object.
