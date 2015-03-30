@@ -16,8 +16,6 @@
 
 package io.vertx.rxjava.ext.mongo;
 
-import java.util.Map;
-import io.vertx.lang.rxjava.InternalHelper;
 import rx.Observable;
 import java.util.List;
 import io.vertx.ext.mongo.WriteOption;
@@ -336,7 +334,7 @@ public class MongoService {
    * @return 
    */
   public MongoService findOne(String collection, JsonObject query, JsonObject fields, Handler<AsyncResult<JsonObject>> resultHandler) { 
-    this.delegate.findOne(collection, query, fields, resultHandler);
+    this.delegate.findOneWithFields(collection, query, fields, resultHandler);
     return this;
   }
 

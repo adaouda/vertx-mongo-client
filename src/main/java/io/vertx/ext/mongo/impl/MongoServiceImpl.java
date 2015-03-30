@@ -2,7 +2,11 @@ package io.vertx.ext.mongo.impl;
 
 import com.mongodb.WriteConcern;
 import com.mongodb.async.SingleResultCallback;
-import com.mongodb.async.client.*;
+import com.mongodb.async.client.FindIterable;
+import com.mongodb.async.client.MongoClient;
+import com.mongodb.async.client.MongoClients;
+import com.mongodb.async.client.MongoCollection;
+import com.mongodb.async.client.MongoDatabase;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -173,7 +177,12 @@ public class MongoServiceImpl implements MongoService {
   }
 
   @Override
-  public MongoService findOne(String collection, JsonObject query, JsonObject fields, Handler<AsyncResult<JsonObject>> resultHandler) {
+  public MongoService findOne(String collection, JsonObject query, Handler<AsyncResult<JsonObject>> resultHandler) {
+    return findOneWithFields(collection, query, null, resultHandler);
+  }
+
+  @Override
+  public MongoService findOneWithFields(String collection, JsonObject query, JsonObject fields, Handler<AsyncResult<JsonObject>> resultHandler) {
     requireNonNull(collection, "collection cannot be null");
     requireNonNull(query, "query cannot be null");
     requireNonNull(resultHandler, "resultHandler cannot be null");
@@ -277,6 +286,7 @@ public class MongoServiceImpl implements MongoService {
 
   private <T, R> SingleResultCallback<T> convertCallback(Handler<AsyncResult<R>> resultHandler, Function<T, R> converter) {
     return (result, error) -> {
+      logCallbackError(error);
       vertx.runOnContext(v -> {
         if (error != null) {
           resultHandler.handle(Future.failedFuture(error));
@@ -289,6 +299,7 @@ public class MongoServiceImpl implements MongoService {
 
   private <T> SingleResultCallback<T> wrapCallback(Handler<AsyncResult<T>> resultHandler) {
     return (result, error) -> {
+      logCallbackError(error);
       vertx.runOnContext(v -> {
         if (error != null) {
           resultHandler.handle(Future.failedFuture(error));
@@ -297,6 +308,12 @@ public class MongoServiceImpl implements MongoService {
         }
       });
     };
+  }
+
+  private void logCallbackError(Throwable error) {
+    if (error != null) {
+      log.warn(error.getMessage(), error);
+    }
   }
 
   private FindIterable<JsonObject> doFind(String collection, JsonObject query, FindOptions options) {

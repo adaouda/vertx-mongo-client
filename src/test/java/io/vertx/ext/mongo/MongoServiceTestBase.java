@@ -297,15 +297,15 @@ public abstract class MongoServiceTestBase extends VertxTestBase {
     JsonObject doc = new JsonObject(map);
     mongoService.insert(collection, doc, onSuccess(id -> {
       assertNotNull(id);
-      mongoService.findOne(collection, new JsonObject().put("_id", id), null, onSuccess(result -> {
-        assertNotNull(result);
-        assertNotNull(result.getJsonObject("nestedMap"));
-        assertEquals("bar", result.getJsonObject("nestedMap").getString("foo"));
-        assertNotNull(result.getJsonArray("nestedList"));
-        assertEquals(1, (int) result.getJsonArray("nestedList").getInteger(0));
-        assertEquals(2, (int) result.getJsonArray("nestedList").getInteger(1));
-        assertEquals(3, (int) result.getJsonArray("nestedList").getInteger(2));
-        testComplete();
+      mongoService.findOneWithFields(collection, new JsonObject().put("_id", id), null, onSuccess(result -> {
+          assertNotNull(result);
+          assertNotNull(result.getJsonObject("nestedMap"));
+          assertEquals("bar", result.getJsonObject("nestedMap").getString("foo"));
+          assertNotNull(result.getJsonArray("nestedList"));
+          assertEquals(1, (int) result.getJsonArray("nestedList").getInteger(0));
+          assertEquals(2, (int) result.getJsonArray("nestedList").getInteger(1));
+          assertEquals(3, (int) result.getJsonArray("nestedList").getInteger(2));
+          testComplete();
       }));
     }));
     await();
@@ -323,9 +323,9 @@ public abstract class MongoServiceTestBase extends VertxTestBase {
         // Save again - it should update
         mongoService.save(collection, doc, onSuccess(id2 -> {
           assertNull(id2);
-          mongoService.findOne(collection, new JsonObject(), null, onSuccess(res2 -> {
-            assertEquals("sheep", res2.getString("newField"));
-            testComplete();
+          mongoService.findOneWithFields(collection, new JsonObject(), null, onSuccess(res2 -> {
+              assertEquals("sheep", res2.getString("newField"));
+              testComplete();
           }));
         }));
       }));
@@ -345,15 +345,15 @@ public abstract class MongoServiceTestBase extends VertxTestBase {
     JsonObject doc = new JsonObject(map);
     mongoService.save(collection, doc, onSuccess(id -> {
       assertNotNull(id);
-      mongoService.findOne(collection, new JsonObject().put("_id", id), null, onSuccess(result -> {
-        assertNotNull(result);
-        assertNotNull(result.getJsonObject("nestedMap"));
-        assertEquals("bar", result.getJsonObject("nestedMap").getString("foo"));
-        assertNotNull(result.getJsonArray("nestedList"));
-        assertEquals(1, (int) result.getJsonArray("nestedList").getInteger(0));
-        assertEquals(2, (int) result.getJsonArray("nestedList").getInteger(1));
-        assertEquals(3, (int) result.getJsonArray("nestedList").getInteger(2));
-        testComplete();
+      mongoService.findOneWithFields(collection, new JsonObject().put("_id", id), null, onSuccess(result -> {
+          assertNotNull(result);
+          assertNotNull(result.getJsonObject("nestedMap"));
+          assertEquals("bar", result.getJsonObject("nestedMap").getString("foo"));
+          assertNotNull(result.getJsonArray("nestedList"));
+          assertEquals(1, (int) result.getJsonArray("nestedList").getInteger(0));
+          assertEquals(2, (int) result.getJsonArray("nestedList").getInteger(1));
+          assertEquals(3, (int) result.getJsonArray("nestedList").getInteger(2));
+          testComplete();
       }));
     }));
     await();
@@ -371,9 +371,9 @@ public abstract class MongoServiceTestBase extends VertxTestBase {
         // Save again - it should update
         mongoService.save(collection, doc, onSuccess(id2 -> {
           assertNull(id2);
-          mongoService.findOne(collection, new JsonObject(), null, onSuccess(res2 -> {
-            assertEquals("sheep", res2.getString("newField"));
-            testComplete();
+          mongoService.findOneWithFields(collection, new JsonObject(), null, onSuccess(res2 -> {
+              assertEquals("sheep", res2.getString("newField"));
+              testComplete();
           }));
         }));
       }));
@@ -443,11 +443,11 @@ public abstract class MongoServiceTestBase extends VertxTestBase {
       JsonObject doc = orig.copy();
       mongoService.insert(collection, doc, onSuccess(id -> {
         assertNotNull(id);
-        mongoService.findOne(collection, new JsonObject().put("foo", "bar"), null, onSuccess(obj -> {
-          assertTrue(obj.containsKey("_id"));
-          obj.remove("_id");
-          assertEquals(orig, obj);
-          testComplete();
+        mongoService.findOneWithFields(collection, new JsonObject().put("foo", "bar"), null, onSuccess(obj -> {
+            assertTrue(obj.containsKey("_id"));
+            obj.remove("_id");
+            assertEquals(orig, obj);
+            testComplete();
         }));
       }));
     }));
@@ -461,11 +461,11 @@ public abstract class MongoServiceTestBase extends VertxTestBase {
       JsonObject doc = createDoc();
       mongoService.insert(collection, doc, onSuccess(id -> {
         assertNotNull(id);
-        mongoService.findOne(collection, new JsonObject().put("foo", "bar"), new JsonObject().put("num", true), onSuccess(obj -> {
-          assertEquals(2, obj.size());
-          assertEquals(123, obj.getInteger("num").intValue());
-          assertTrue(obj.containsKey("_id"));
-          testComplete();
+        mongoService.findOneWithFields(collection, new JsonObject().put("foo", "bar"), new JsonObject().put("num", true), onSuccess(obj -> {
+            assertEquals(2, obj.size());
+            assertEquals(123, obj.getInteger("num").intValue());
+            assertTrue(obj.containsKey("_id"));
+            testComplete();
         }));
       }));
     }));
@@ -476,9 +476,9 @@ public abstract class MongoServiceTestBase extends VertxTestBase {
   public void testFindOneNotFound() throws Exception {
     String collection = randomCollection();
     mongoService.createCollection(collection, onSuccess(res -> {
-      mongoService.findOne(collection, new JsonObject().put("foo", "bar"), null, onSuccess(obj -> {
-        assertNull(obj);
-        testComplete();
+      mongoService.findOneWithFields(collection, new JsonObject().put("foo", "bar"), null, onSuccess(obj -> {
+          assertNull(obj);
+          testComplete();
       }));
     }));
     await();
@@ -644,9 +644,10 @@ public abstract class MongoServiceTestBase extends VertxTestBase {
     String collection = randomCollection();
     mongoService.insert(collection, createDoc(), onSuccess(id -> {
       mongoService.update(collection, new JsonObject().put("_id", id), new JsonObject().put("$set", new JsonObject().put("foo", "fooed")), onSuccess(res -> {
-        mongoService.findOne(collection, new JsonObject().put("_id", id), null, onSuccess(doc -> {
-          assertEquals("fooed", doc.getString("foo"));
-          testComplete();
+        mongoService.findOneWithFields(collection, new JsonObject().put("_id", id), null, onSuccess(doc -> {
+            System.out.println(doc.getString("foo"));
+            assertEquals("fooed", doc.getString("foo"));
+            testComplete();
         }));
       }));
     }));

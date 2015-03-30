@@ -279,14 +279,37 @@ var MongoService = function(j_val) {
    @public
    @param collection {string} the collection 
    @param query {Object} the query used to match the document 
+   @param resultHandler {function} will be provided with the document, if any 
+   @return {MongoService}
+   */
+  this.findOne = function(collection, query, resultHandler) {
+    var __args = arguments;
+    if (__args.length === 3 && typeof __args[0] === 'string' && typeof __args[1] === 'object' && typeof __args[2] === 'function') {
+      j_mongoService["findOne(java.lang.String,io.vertx.core.json.JsonObject,io.vertx.core.Handler)"](collection, utils.convParamJsonObject(query), function(ar) {
+      if (ar.succeeded()) {
+        resultHandler(utils.convReturnJson(ar.result()), null);
+      } else {
+        resultHandler(null, ar.cause());
+      }
+    });
+      return that;
+    } else utils.invalidArgs();
+  };
+
+  /**
+   Find a single matching document in the specified collection
+
+   @public
+   @param collection {string} the collection 
+   @param query {Object} the query used to match the document 
    @param fields {Object} the fields 
    @param resultHandler {function} will be provided with the document, if any 
    @return {MongoService}
    */
-  this.findOne = function(collection, query, fields, resultHandler) {
+  this.findOneWithFields = function(collection, query, fields, resultHandler) {
     var __args = arguments;
     if (__args.length === 4 && typeof __args[0] === 'string' && typeof __args[1] === 'object' && typeof __args[2] === 'object' && typeof __args[3] === 'function') {
-      j_mongoService["findOne(java.lang.String,io.vertx.core.json.JsonObject,io.vertx.core.json.JsonObject,io.vertx.core.Handler)"](collection, utils.convParamJsonObject(query), utils.convParamJsonObject(fields), function(ar) {
+      j_mongoService["findOneWithFields(java.lang.String,io.vertx.core.json.JsonObject,io.vertx.core.json.JsonObject,io.vertx.core.Handler)"](collection, utils.convParamJsonObject(query), utils.convParamJsonObject(fields), function(ar) {
       if (ar.succeeded()) {
         resultHandler(utils.convReturnJson(ar.result()), null);
       } else {
