@@ -16,6 +16,8 @@
 
 package io.vertx.rxjava.ext.mongo;
 
+import java.util.Map;
+import io.vertx.lang.rxjava.InternalHelper;
 import rx.Observable;
 import java.util.List;
 import io.vertx.ext.mongo.WriteOption;
@@ -329,11 +331,35 @@ public class MongoService {
    * Find a single matching document in the specified collection
    * @param collection the collection
    * @param query the query used to match the document
+   * @param resultHandler will be provided with the document, if any
+   * @return 
+   */
+  public MongoService findOne(String collection, JsonObject query, Handler<AsyncResult<JsonObject>> resultHandler) { 
+    this.delegate.findOne(collection, query, resultHandler);
+    return this;
+  }
+
+  /**
+   * Find a single matching document in the specified collection
+   * @param collection the collection
+   * @param query the query used to match the document
+   * @return 
+   */
+  public Observable<JsonObject> findOneObservable(String collection, JsonObject query) { 
+    io.vertx.rx.java.ObservableFuture<JsonObject> resultHandler = io.vertx.rx.java.RxHelper.observableFuture();
+    findOne(collection, query, resultHandler.toHandler());
+    return resultHandler;
+  }
+
+  /**
+   * Find a single matching document in the specified collection
+   * @param collection the collection
+   * @param query the query used to match the document
    * @param fields the fields
    * @param resultHandler will be provided with the document, if any
    * @return 
    */
-  public MongoService findOne(String collection, JsonObject query, JsonObject fields, Handler<AsyncResult<JsonObject>> resultHandler) { 
+  public MongoService findOneWithFields(String collection, JsonObject query, JsonObject fields, Handler<AsyncResult<JsonObject>> resultHandler) { 
     this.delegate.findOneWithFields(collection, query, fields, resultHandler);
     return this;
   }
@@ -345,9 +371,9 @@ public class MongoService {
    * @param fields the fields
    * @return 
    */
-  public Observable<JsonObject> findOneObservable(String collection, JsonObject query, JsonObject fields) { 
+  public Observable<JsonObject> findOneWithFieldsObservable(String collection, JsonObject query, JsonObject fields) { 
     io.vertx.rx.java.ObservableFuture<JsonObject> resultHandler = io.vertx.rx.java.RxHelper.observableFuture();
-    findOne(collection, query, fields, resultHandler.toHandler());
+    findOneWithFields(collection, query, fields, resultHandler.toHandler());
     return resultHandler;
   }
 
