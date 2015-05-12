@@ -23,11 +23,17 @@
   <parent>
     <groupId>io.vertx</groupId>
     <artifactId>vertx-ext-parent</artifactId>
-    <version>9</version>
+    <version>12</version>
   </parent>
 
-  <artifactId>vertx-mongo-service</artifactId>
+  <modules>
+    <module>vertx-mongo-client</module>
+    <module>vertx-mongo-service</module>
+  </modules>
+
+  <artifactId>vertx-mongo</artifactId>
   <version>3.0.0-tmpfork-SNAPSHOT</version>
+  <packaging>pom</packaging>
 
   <name>Vert.x Mongo Service</name>
 
@@ -55,7 +61,7 @@
     <dependency>
       <groupId>org.mongodb</groupId>
       <artifactId>mongodb-driver-async</artifactId>
-      <version>3.0.0-beta3</version>
+      <version>3.0.0</version>
       <exclusions>
         <exclusion>
           <groupId>io.netty</groupId>
@@ -83,11 +89,12 @@
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>
-      <artifactId>vertx-service-proxy</artifactId>
+      <artifactId>vertx-lang-groovy</artifactId>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>
-      <artifactId>vertx-lang-groovy</artifactId>
+      <artifactId>vertx-lang-ruby</artifactId>
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -117,16 +124,36 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-service-factory</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
       <version>4.11</version>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <!-- Work around because the vertx-ext-parent does not support well aggregators -->
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.8</version>
+        <executions>
+          <execution>
+            <configuration>
+              <target>
+                <mkdir dir="${project.basedir}/src/main/asciidoc"/>
+                <mkdir dir="${project.basedir}/src/main/resources"/>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <phase>generate-sources</phase>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
 
 </project>
