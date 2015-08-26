@@ -75,7 +75,7 @@ public abstract class MongoClientTestBase extends MongoTestBase {
   @Test
   public void testRunCommand() throws Exception {
     JsonObject ping = new JsonObject().put("isMaster", 1);
-    mongoClient.runCommand(ping, onSuccess(reply -> {
+    mongoClient.runCommand("isMaster",ping, onSuccess(reply -> {
       assertTrue(reply.getBoolean("ismaster"));
       testComplete();
     }));
@@ -85,7 +85,7 @@ public abstract class MongoClientTestBase extends MongoTestBase {
   @Test
   public void testRunInvalidCommand() throws Exception {
     JsonObject ping = new JsonObject().put("iuhioqwdqhwd", 1);
-    mongoClient.runCommand(ping, onFailure(ex -> {
+    mongoClient.runCommand("iuhioqwdqhwd",ping, onFailure(ex -> {
       testComplete();
     }));
     await();

@@ -269,7 +269,7 @@ public interface MongoClient {
    * @param resultHandler  will be called with the result.
    */
   @Fluent
-  MongoClient runCommand(JsonObject command, Handler<AsyncResult<JsonObject>> resultHandler);
+  MongoClient runCommand(String commandName, JsonObject command, Handler<AsyncResult<JsonObject>> resultHandler);
 
   /**
    * Close the client and release its resources

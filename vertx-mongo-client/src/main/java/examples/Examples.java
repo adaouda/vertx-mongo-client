@@ -342,7 +342,7 @@ public class Examples {
 
   public void example12(MongoClient mongoClient) {
 
-    mongoClient.runCommand(new JsonObject().put("ping", 1), res -> {
+    mongoClient.runCommand("ping",new JsonObject().put("ping", 1), res -> {
 
       if (res.succeeded()) {
 

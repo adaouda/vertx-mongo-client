@@ -570,7 +570,7 @@ Here's an example of running a ping command
 ----
 require 'json'
 
-mongoClient.run_command({
+mongoClient.run_command("ping", {
   'ping' => 1
 }) { |res,res_err|
 

@@ -567,7 +567,7 @@ Here's an example of running a ping command
 [source,js]
 ----
 
-mongoClient.runCommand({
+mongoClient.runCommand("ping", {
   "ping" : 1
 }, function (res, res_err) {
 

@@ -556,7 +556,7 @@ mongoClient.dropCollection("mynewcollectionr", { res ->
 
 === Running other MongoDB commands
 
-You can run arbitrary MongoDB commands with `link:groovydoc/io/vertx/groovy/ext/mongo/MongoClient.html#runCommand(io.vertx.core.json.JsonObject,%20io.vertx.core.Handler)[runCommand]`.
+You can run arbitrary MongoDB commands with `link:groovydoc/io/vertx/groovy/ext/mongo/MongoClient.html#runCommand(java.lang.String,%20io.vertx.core.json.JsonObject,%20io.vertx.core.Handler)[runCommand]`.
 
 Commands can be used to run more advanced mongoDB features, such as using MapReduce.
 For more information see the mongo docs for supported http://docs.mongodb.org/manual/reference/command[Commands].
@@ -566,7 +566,7 @@ Here's an example of running a ping command
 [source,groovy]
 ----
 
-mongoClient.runCommand([
+mongoClient.runCommand("ping", [
   ping:1
 ], { res ->
 

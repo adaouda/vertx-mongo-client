@@ -38,7 +38,7 @@
   <name>Vert.x Mongo Service</name>
 
   <properties>
-    <stack.version>3.0.0-SNAPSHOT</stack.version>
+    <stack.version>3.0.0-milestone5</stack.version>
   </properties>
 
   <dependencyManagement>
@@ -61,7 +61,7 @@
     <dependency>
       <groupId>org.mongodb</groupId>
       <artifactId>mongodb-driver-async</artifactId>
-      <version>3.0.0</version>
+      <version>3.0.2</version>
       <exclusions>
         <exclusion>
           <groupId>io.netty</groupId>
